@@ -52,8 +52,9 @@ function inicioGame() {
   fill(255);
   text("Bienvenido al juego", 600, 200);
   text("Haz click para iniciar", 600, 250);
-  text("Presiona el mouse para saltar", 550, 300);
-  text("Maximo Puntaje: " + puntajeMaximo, 550, 350);
+  fill(255, 255, 0); 
+  text("Último Puntaje: " + puntajeAnterior, 550, 360);
+  text("Máximo Puntaje: " + puntajeMaximo, 550, 400);
 
 
 }
@@ -63,56 +64,65 @@ function inicioGame() {
 
 
 
-function playing(){
-
+function playing() {
   background(255);
   imageMode(CORNER);
   image(fondoJuego, x, 0);
   image(fondoJuego, x + fondoJuego.width, 0);
   x = x - desX;
   if (x <= -fondoJuego.width) {
-    x = 0
+    x = 0;
   }
 
   for (let i = 0; i < wallX.length; i++) {
     imageMode(CENTER);
     
-    
-    
-    // Tubo de arriba
-    image(pared, wallX[i], wallY[i] - 535, 100, 800); 
-    
-    // Tubo de abajo
-    image(pared, wallX[i], wallY[i] + 535, 100, 800); 
+   
+    image(pared, wallX[i], wallY[i] - 500, 100, 800); 
+    image(pared, wallX[i], wallY[i] + 500, 100, 800); 
     
     wallX[i] = wallX[i] - desX;
 
     
     if (wallX[i] < -50) {
       wallX[i] = width + 100;
-      
       wallY[i] = random(300, 700); 
     }
 
-  }  
+    
+    if (wallX[i] == posx) {
+      puntaje = puntaje + 1;
+    }
+
+    
+    if (posx + 20 > wallX[i] - 40 && posx - 20 < wallX[i] + 40) {
+      
+      
+      if (posy - 20 < wallY[i] - 100 || posy + 20 > wallY[i] + 100) {
+        perderJuego(); 
+      }
+    }
+  } 
+
+  
   velocidadY = velocidadY + gravedad; 
-  
-  
   posy = posy + velocidadY;
 
-  
-  if (posy > height - 60) {
-    posy = height - 60; 
-    velocidadY = 0;     
+ 
+  if (posy > height - 30 || posy < 30) {
+    perderJuego();
   }
 
   
-  if (posy < 0) {
-    posy = 0;
-    velocidadY = 0;
-  }
-
+  imageMode(CENTER);
   image(personaje, posx, posy, 60, 60);
+
+  
+  fill(0);
+  textSize(50);
+  textAlign(CENTER);
+  text(puntaje, width / 2, 80);
+  textAlign(LEFT); 
 }
 
 function mousePressed() {
@@ -120,15 +130,30 @@ function mousePressed() {
     estadoJuego = 1;
     x = 0;
     posx = 100;
-    posy = 100;
+    posy = height / 2; 
     puntaje = 0;
     puntajeAnterior = puntajeMaximo;
     noCursor();
+    
     wallX = [500, 800, 1100];
-    wallY = [random(200, 300), random(400, 600), random(200, 300)];
-    velocidadY = -15; // Aplicamos el primer salto al iniciar
+    wallY = [random(300, 700), random(300, 700), random(300, 700)];
+    
+    
+    velocidadY = -12; 
   } else if (estadoJuego == 1) {
-    velocidadY = -15; // Salto normal mientras se juega
+    
+    velocidadY = -12; 
+  }
+}
+
+
+function perderJuego() {
+  estadoJuego = 0; 
+  puntajeAnterior = puntaje;
+  
+  
+  if (puntaje > puntajeMaximo) {
+    puntajeMaximo = puntaje;
   }
 }
 
