@@ -1,6 +1,9 @@
 let  fondoJuego;
 let personaje;
 let fondoCarga;
+let pared;
+let wallX=[];
+let wallY=[];
 let x = 0
 let desX = 5
 let posx = 100
@@ -21,6 +24,7 @@ function preload() {
   fondoJuego = loadImage("./images/fondojuego1.0.jpg");
   personaje = loadImage("./images/kuri01.gif");
   fondoCarga = loadImage("./images/yugifondo.jpg");
+  pared = loadImage("./images/tubo.png");
 }
 
 function setup() {
@@ -70,6 +74,27 @@ function playing(){
     x = 0
   }
 
+  for (let i = 0; i < wallX.length; i++) {
+    imageMode(CENTER);
+    
+    
+    
+    // Tubo de arriba
+    image(pared, wallX[i], wallY[i] - 535, 100, 800); 
+    
+    // Tubo de abajo
+    image(pared, wallX[i], wallY[i] + 535, 100, 800); 
+    
+    wallX[i] = wallX[i] - desX;
+
+    
+    if (wallX[i] < -50) {
+      wallX[i] = width + 100;
+      
+      wallY[i] = random(300, 700); 
+    }
+
+  }  
   velocidadY = velocidadY + gravedad; 
   
   
@@ -91,17 +116,19 @@ function playing(){
 }
 
 function mousePressed() {
-  if(estadoJuego == 0){
+  if (estadoJuego == 0) {
     estadoJuego = 1;
     x = 0;
     posx = 100;
     posy = 100;
     puntaje = 0;
-    puntakeAnterior = puntajeMaximo;
+    puntajeAnterior = puntajeMaximo;
     noCursor();
-    
-
+    wallX = [500, 800, 1100];
+    wallY = [random(200, 300), random(400, 600), random(200, 300)];
+    velocidadY = -15; // Aplicamos el primer salto al iniciar
+  } else if (estadoJuego == 1) {
+    velocidadY = -15; // Salto normal mientras se juega
   }
-  
-  velocidadY = -15;
 }
+
