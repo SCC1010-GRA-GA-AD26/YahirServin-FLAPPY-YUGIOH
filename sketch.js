@@ -220,6 +220,7 @@ function perderJuego() {
     puntajeMaximo = puntaje;
   }
 
+}
 function mousePressed() {
   if (estadoJuego == 0) {
     estadoJuego = 1;
@@ -246,5 +247,5 @@ function mousePressed() {
  }
 
 
-}
+
 
